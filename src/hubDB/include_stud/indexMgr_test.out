@@ -1,0 +1,57 @@
+
+Kreieren zweier Indexe: index1.dat, index2.dat
+IndexMgr:
+maxOpenIdx: 3
+BTree in FileNo 0, 1x opened:
+[ 0 ]
+BTree in FileNo 1, 1x opened:
+[ 0 ]
+
+Oeffnen von Index index1.dat
+IndexMgr:
+maxOpenIdx: 3
+BTree in FileNo 0, 2x opened:
+[ 0 ]
+BTree in FileNo 1, 1x opened:
+[ 0 ]
+
+Einfuegen von 10, 20, 30, 40, 50 in index1.dat
+IndexMgr:
+maxOpenIdx: 3
+BTree in FileNo 0, 2x opened:
+[ 1 (30	foo) 3]
+	[ 0 (10	foo) 0(20	foo) 0]
+	[ 0 (40	foo) 0(50	foo) 0]
+BTree in FileNo 1, 1x opened:
+[ 0 ]
+
+Suche von 30... OKAY
+
+Suche des kleinsten Schluessels... OKAY
+
+Loeschen von 30... OKAY
+
+Loeschen von (nicht vorhandener) 70... OKAY
+IndexMgr:
+maxOpenIdx: 3
+BTree in FileNo 0, 2x opened:
+[ 0 (10	foo) 0(20	foo) 0(40	foo) 0(50	foo) 0]
+BTree in FileNo 1, 1x opened:
+[ 0 ]
+
+Schliessen von index1.dat
+IndexMgr:
+maxOpenIdx: 3
+BTree in FileNo 0, 1x opened:
+[ 0 (10	foo) 0(20	foo) 0(40	foo) 0(50	foo) 0]
+BTree in FileNo 1, 1x opened:
+[ 0 ]
+
+disconnect
+IndexMgr:
+maxOpenIdx: 3
+
+Loeschen der Indexe index1.dat, index2.dat
+IndexMgr:
+maxOpenIdx: 3
+

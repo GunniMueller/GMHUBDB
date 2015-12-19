@@ -1,0 +1,100 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.74 [en] (X11; U; Linux 2.2.16 i686) [Netscape]">
+   <title>DBSII - Aufgabe 3 - hubdb </title>
+</head>
+<body text="#000000" background="/images/dbisbackground.gif" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<font COLOR="#FFFFFF" FACE="Helvetica, Arial, sans-serif">
+<table BORDER=0 CELLSPACING=0 CELLPADDING=1 WIDTH=90%>
+<tr><td BGCOLOR="#000000"><center><font COLOR="#FFFFFF" SIZE=+2><b>Aufgabe 3 - hubdb - Indexmanager</b></font><br></center></td></tr>
+<tr><td BGCOLOR="#CCCCCC">
+
+<br>
+<p>Im Rahmen der dritten Aufgabe ist die Funktionalität eines Indexmanagers für das Datenbankmanagementsystems <a HREF="./hubdb.html"><i>hubdb</i></a> zu implementieren.
+<br><h2><b>&nbsp;Überblick</b></h2>
+<blockquote>
+<p>Ein Zugriffspfad auf eine Datei, der selbst wiederum als Datei dargestellt wird, hei&szlig;t <b>Index</b> bzw. <b>Indexdatei</b>. Mit einem Index wird eine effizientere Verwaltung der Daten m&ouml;glich, indem auf <b>jedes einzelne Tupel schneller zugegriffen</b> werden kann als bei der einfachen sequentiellen Suche in einer Datei. Zugriffspfade werden u.a. durch Hashing, B-B&auml;ume und deren Varianten, Grid-Files, R-B&auml;ume und K-D-B&auml;ume unterst&uuml;tzt.</p>
+<p>Ein Eintrag in einem Index ist immer ein <b>Tupel </b>bestehend aus einem <b>Schl&uuml;sselelement K</b>, dem <b>Datensatz (Datentupel) T</b> und eventuell einem&nbsp; <b>zus&auml;tzlichen Zeiger P</b> f&uuml;r die weitere Suche im Zugriffspfad. Der Zeiger P zeigt auf die n&auml;chste Indexseite der Indexdatei und definiert dadurch den Pfad. Mit Hilfe des Schl&uuml;ssels wird wertebasiert in der Indexdatei gesucht. Auf der Dom&auml;ne des Schl&uuml;ssels ist folglich immer eine Ordnung definiert. Das assoziierte Datentupel T kann entweder vollst&auml;ndig im Index gespeichert sein oder aber nur als Tupelidentifikator <b>TID</b>. Im relationalen Datenbankkontext ist der Indexschl&uuml;ssel ein Attribut der indizierten Relation (siehe <a href="#U1">&Uuml;bungsaufgabe 1</a>).</p>
+<p>Man unterscheidet zwischen Prim&auml;r- und Sekund&auml;rindex. Ein Prim&auml;rindex ist auf dem Primärschlüssel definiert und es gibt zu jedem Schl&uuml;ssel h&ouml;chstens ein Datentupel (siehe <a href="#U2">&Uuml;bungsaufgabe 2</a>). Ein Sekund&auml;rindex ist auf einem weiteren Schlüsselkandidaten oder einem anderen Attribut definiert. Es k&ouml;nnen somit auch mehrere Datentupel unter einem Schl&uuml;ssel gespeichert werden.</p>
+</blockquote>
+<br><h2><b>&nbsp;Funktionalität des B-Baums</i></b></h2>
+<blockquote>
+<p><b><u><a href="./bb_intro.ps">Beschreibung des B-Baums (link)</a></u></b> (<u><b><a href="./bb_intro.pdf">pdf</a></b>)</u></p>
+<p>Wir implementieren in dieser Phase einen einfachen B-Baum als Index. Der Indexmanager wird im Wesentlichen die Funktionalität des B-Baums sowie einiger Funktionen des Buffermanagers kapseln. Dieser Abschnitt soll einen ersten Eindruck zur Arbeitsweise von B-Bäumen vermitteln. Zur Vereinfachung treffen wir folgende Einschr&auml;nkungen:
+<ul>
+<li>Der B-Baum beruht auf einem Prim&auml;rindex, d.h., wir verwalten ein Tupel pro Schl&uuml;ssel.</li>
+<li>Die Datentupel werden direkt in den Knoten des B-Baums gespeichert. In unserem Datenbanksystem sind deshalb sämtliche Relationen indiziert und in Form eines B-Baums verwaltet. Es gibt demnach kein eigenes Kommando <b>CREATE INDEX</b>. <font COLOR="#FF0000">Achtung: Sämtliche bisher angelegten Tabellen werden nach der Implementierung des Indexmanagers nicht mehr korrekt zugreifbar sein. Im Bedarfsfall die Tabellen deshalb exportieren und in die neue Version mit Indexmanager importieren!</font></li>
+</ul>
+Der <b>B-Baum </b> ist ein <b>Mehrwege-Baum</b>, d.h. jeder Knoten hat mehrere Nachfolger. Haupteigenschaft des B-Baum ist, dass jeder Pfad im Baum gleich lang ist (alle Bl&auml;tter sind auf einer Ebene). Der B-Baum ist demnach <b>balanciert.</b> Jeder Knoten entspricht einer Seite im File. Jede Seite (bis auf die Wurzel) ist mindestens mit&nbsp; <b>m</b>&nbsp; und h&ouml;chstens&nbsp; <b>M = 2*m&nbsp;</b> Indexeintr&auml;gen gef&uuml;llt. Jeder Knoten (Seite) enth&auml;lt eine Sequenz von <b>sortierten Schl&uuml;sseln K1 &lt; K2 &lt; ... &lt; Kn</b>, die den Suchraum in <b>n+1 </b>weitere Teilr&auml;ume unterteilen, welche alle von diesem Knoten aus erreichbar sind (verwaltet werden). Diese Teilr&auml;ume werden &uuml;ber die Zeiger <b>P0 ... Pn </b>referenziert. <b>P0 </b>referenziert den Schl&uuml;sselraum mit den Werten <b>K &lt; K1 </b>und <b>Pn </b>den Schl&uuml;sselraum mit den Werten <b>K > Kn</b>. F&uuml;r die Werte <b>K </b>der Schl&uuml;sselr&auml;ume, die &uuml;ber die Zeiger <b>Pi </b>mit <b>i = 1 ... n-1 </b>referenziert werden gilt: <b>Ki &lt; K &lt; K(i+1)</b>. Zu jedem <b>Ki</b> gibt es ein Tupel<b> Ti</b> und einen Zeiger <b>Pi</b>. (In einer Variante des B-B wird keine Tupelinformation in den Zwischenknoten gespeichert, sondern nur in den Bl&auml;ttern, was zu einer Unterscheidung zwischen reinen Indexseiten und Datenseiten (siehe <a href="#U3">&Uuml;bungsaufgabe 3</a>) f&uuml;hrt.</p>
+<p><b>Suche K (bzw. dessen Tupel) im B-Baum:</b></p>
+<p>Die Suche beginnt in der Wurzel des Baumes. Der Schl&uuml;ssel <b>K</b> wird nacheinander mit allen <b>Ki</b>-Eintr&auml;gen in diesem Knoten verglichen:</p>
+<p>(1) Wenn er gleich einem <b>Kj</b> ist, so wird das zugeh&ouml;rige Tupel <b>Tj</b> ausgegeben.</p>
+<p>(2) Ist <b>K</b> kleiner als <b>K1</b>, so wird die Suche rekursiv in dem Knoten fortgesetzt, der durch <b>P0</b> referenziert wird.</p>
+<p>(3) Anderenfalls, wird die Suche rekursiv in dem Knoten fortgesetzt, der durch einen Zeiger <b>Pi</b> referenziert wird, so da&szlig; <b>Ki &lt; K </b>und <b>i </b>ist das kleinste <b>i</b>, auf das letztere Bedingung zutrifft.</p>
+<p><a NAME="einfuegen"></a><b><a href="Aufgabe3_1/bb_insert.ps">Einf&uuml;gen
+T in einen B-Baum</a></b> (<b><a href="./bb_insert.pdf">pdf</a></b>)</p>
+<p>Zuerst wird zu dem Tupel <b>T</b> der Schl&uuml;sselwert <b>K</b> gebildet und die entsprechende Seite gesucht, in die der neue Eintrag eingef&uuml;gt werden kann. Bei dieser Seite handelt es sich um ein Blatt. Das Tupel wird die Ordnung erhaltend eingetragen. <i>Wenn der Knoten mehr als <b>M</b> Eintrage erh&auml;lt (&Uuml;berlauf), so wird versucht, einen Eintrag zuerst  auf den rechten Nachbarknoten umzuverteilen - falls der entsprechende Nachbarknoten dadurch nicht selbst &uuml;berl&auml;uft. Ist dies nicht möglich, so wird versucht, den Eintrag auf den linken Nachbarknoten umzuverteilen. </i>Ist beides nicht möglich, so muss der Knoten geteilt werden, d.h., die ersten <b>m </b>Indexeintr&auml;ge verbleiben im Knoten, die letzten <b>m</b> Eintr&auml;ge werden in den neuen Knoten kopiert. Der "mittlere" Indexeintrag <b>(K(m+1), T(m+1))</b> wird zusammen mit dem zugeh&ouml;rigen Zeiger <b>P(m+1)</b> auf die neue Seite im Vaterknoten ordnungserhaltend eingetragen. Bei &Uuml;berlauf des Vaters kann sich diese Balanzierung bis zur Wurzel fortsetzen. (siehe <a href="#U4">&Uuml;bungsaufgabe 4</a>).</p>
+<p><b>Einf&uuml;gen von 15 Elementen in einen neuen B-Baum</b> (RELOAD
+klicken). <font COLOR="#FF0000">Das Beispiel dient lediglich der Veranschaulichung und gibt den zu implementierenden Algorithmus nicht 1:1 wieder!</font></p>
+<p><center><img SRC="Btreeinsert_long.gif" height=286 width=661 align=BOTTOM></center></p>
+<p><a NAME="loeschen"></a><b><a href="./bb_delete.ps">L&ouml;schen
+eines Tupels Ti aus einem B-Baum</a></b> (<b><a href="./bb_delete.pdf">pdf</a></b>)</p>
+<p>Zuerst wird die Seite mit dem Tupel <b>Ti</b> mit Hilfe seines Schl&uuml;ssels <b>Ki</b> gesucht. Befindet sich der Eintrag in einem Blatt, wird er gel&ouml;scht. Ist der zu l&ouml;schende Eintrag nicht in einem Blatt zu finden, muss er durch seinen Inorder-Nachfolger ersetzt werden. (Der Inorder-Nachfolger ist der Eintrag mit dem kleinsten Schl&uuml;ssel des linken Blattes ! des rechten Teilbaumes, auf den der Zeiger des zu ersetzenden Eintrages zeigt.) Wenn nur noch <b>m-1</b> Eintr&auml;ge im Knoten vorhanden sind, muss mit Ausgleichen der Eintr&auml;ge, falls einer der Nachbarknoten mehr als <b>m</b> Eintr&auml;ge besitzt, darauf reagiert werden. <i>Es wird versucht mit dem rechten Nachbarknoten auszugleichen. Nur im Falle, dass dies nicht möglich ist, d.h. es existiert kein rechter Nachbar oder dieser enthält weniger als <b>m+1</b> Einträge, wird mit dem linken Nachbarknoten ausgeglichen. </i>Falls dies nicht m&ouml;glich ist, wird der Knoten mit einem Nachbarknoten verschmolzen. Dieser Vorgang kann sich bis in die Wurzel fortsetzen.</p>
+</blockquote>
+<br><h2><b>&nbsp;Übungsaufgaben</b></h2>
+<blockquote>
+<p>(*1<a NAME="U1"></a>*) Was ist der Unterschied zwischen einem Schl&uuml;sselattribut und einem Indexschl&uuml;ssel ?</p>
+<p>(*2<a NAME="U2"></a>*) Warum "h&ouml;chstens ein" und nicht nur "genau" ein Eintrag ?</p>
+<p>(*3<a NAME="U3"></a>*) Welcher Vorteil best&uuml;nde bei der Unterscheidung von Datenseiten und Indexseiten ?</p>
+<p>(*4<a NAME="U4"></a>*) Die Wurzel erh&auml;lt eine Sonderbehandlung. Es werden 2 neue Seiten alloziiert, in welche je eine Wurzelh&auml;lfte kopiert wird. Warum ?</p>
+</blockquote>
+<br><h2><b>&nbsp;Datenstrukturen</b></h2>
+<blockquote>
+<p>Die Indexdatei besteht wie bisher aus einer Menge von Seiten. Die erste Seite der Datei ist die sog. Info-Seite. Die restlichen Seiten sind sog. Tupel-Seiten. In der Info-Seite stehen am Anfang folgende Informationen:</p>
+<ul>
+<li><b>NextFreePage</b> - Ein Zeiger auf die Seite mit dem nächsten freien Platz.</li>
+<li><b>NumRootPage</b> - Gibt die Seitennummer des Wurzelknotens an.</li>
+<li><b>PageCount</b> - Gibt die aktuelle Dateigröße in Anzahl an Seiten an.</li>
+</ul>
+<p>Die Tupel-Seiten stellen die Knoten des B-Baums dar. In ihnen ist am Anfang folgende Information enthalten:</p>
+<ul>
+<li><b>EntryCount</b> - Anzahl der gültigen Einträge (Tupel) im Knoten.</li>
+<li><b>NextFreePage</b> - Zeiger auf die Seite mit dem nächsten freien Platz.</li>
+<li><b>LessPage</b> - Gibt die Seitennummer des Knotens an, bei dem alle Schlüsselwerte kleiner als der kleines Schlüssel (Entry[0]) dieses Knotens sind.</li>
+</ul>
+<p>Die Einträge bestehen in unserm Fall aus jeweils einem Tupel (die IDs entsprechen den Schlüsseln Ki) und einem Zeiger (Pi) auf den Knoten im Baum, dessen Schlüssel zwischen dem aktuellen Entry und dem folgenden liegen.</p>
+<p><font COLOR="#FF0000">Achtung: Die Datenstrukturen für die Info- und die Tupel-Seiten sind von uns nicht strikt vorgegeben. Um die korrekte Funktion des Befehls <b>SELECT * FROM <i>tabellenname</i></b> zu gewährleisten ist jedoch darauf zu achten, dass die Position der Tupel innerhalb eines Knotens der auf der Abbildung vorgegebenen Beispielstruktur entspricht.</font></p>
+<p><center><img SRC="./TNode.gif"></center></p>
+<p>Folgende Datenstrukturen sind für die Implementierung des Indexmanagers vorgegeben:</p>
+<ul>
+<li><a HREF="./src/hubDB/include_stud/tuple.h">Tupel.h</a> : Definition der Klasse zur Repräsentation der einfachen Tupel des unterstützten Schemas (ID, Name).</li>
+<li><a HREF="./src/hubDB/include_stud/btree.h">BTree.h</a> : Vorgegebene Schnittstelle des zu implementierenden B-Baums.</li>
+<li><a HREF="./src/hubDB/include_stud/indexMgr.h">IndexMgr.h</a> : Schnittstelle des Indexmanagers, der im Wesentlichen die Funktionalität des B-Baums und einige Funktionen des Buffermanagers kapselt.</li>
+<li><a HREF="./src/hubDB/include_stud/indexMgr_test.cpp">IndexMgr_test.cpp</a>: Die Testroutine für den Funktionalitätstest des Indexmanagers (zusammen mit der <a HREF="./src/hubDB/include_stud/indexMgr_test.out">Ausgabe der Referenzimplementierung</a>)</li>
+<li><a HREF="./src/hubDB/include_stud/btree_test.cpp">BTree_test.cpp</a>: Die Testroutine für den Funktionalitätstest des B-Baums (zusammen mit der <a HREF="./src/hubDB/include_stud/btree_test.out">Ausgabe der Referenzimplementierung</a>)</li>
+<li><a HREF="./src/hubDB/include_stud/hubDB.tar.gz">hubDB.tar.gz</a>: Alle benötigten Module und make-Files zum Erstellen des Datenbanksystems (für Solaris). Diese ist für die sog. Vogel-Rechner des Instituts gedacht und soll für die Abgabe verwendet werden.<b>IndexMgr,BufferMgr und FileMgr</b> </li>
+<li><a HREF="./src/hubDB/include_stud/hubDB_idxMgr.tar.gz">hubDB_idxMgr.tar.gz</a>: Alle neuen Module und make-Files zum Erstellen des IndexManagers.</li>
+</ul>
+</blockquote>
+<br><h2><b>&nbsp;Aufgabenstellung</b></h2>
+<blockquote>
+<p>Erstellen Sie für den <font color="#FF0000">14. bzw. 16.06.2005</font> eine Präsentation (Dauer ca. 10-15 Minuten), in der folgendes kurz erläutert wird:</p>
+<ul>
+<li>Benötigte Erweiterungen der vorgegebenen Schnittstellen und zusätzliche Datenstrukturen.</li>
+<li>Vorstellung der zu implementierenden Algorithmen. Die Vorstellung kann stichpunktartig, in Pseudo-Code oder mit Hilfe von Flussdiagrammen erfolgen. Unterst&uuml;tzen Sie ihre Beschreibung an wesentlichen Stellen der Manipulation der Datenstrukturen durch Graphiken.</li>
+<li>Vorstellen der zu implementierenden Testroutine.</li>
+<li>Sonstige Erweiterungen</li>
+</ul>
+<p>Die Abgabe der Präsentation (als PowerPoint- oder PDF-Datei) erfolgt per Mail an den jeweiligen Praktikumsbetreuer des Termins, an dem vorgetragen werden soll. Abgabetermin ist einen Tag vor dem Veranstaltungstermin (23.59 Uhr). Auf rege Teilnahme zum Praktikumstermin wird erneut Wert gelegt.</p>
+<p>Die Ausgabe des B-Baums (<b><a href="./debug-ausgabe-3.2.ascii">hier ist ein Beispiel</a></b>) mit Hilfe der <b><i>>>()-</i></b>Methode ist so zugestalten, da&szlig; der B-Baum seitenweise <b><i>in Preorder-Traversierung</i></b> ausgegeben wird. Hierbei m&uuml;ssen f&uuml;r jede Seite (Knoten) des B-Baums die Seitennummer und s&auml;mtliche, <b><i>aber nur g&uuml;ltige </i></b>Eintr&auml;ge (<b><i>mit jeweiligem Pointer P, Schl&uuml;ssel K, TID</i></b>) in ihrer vorliegenden Reihenfolge ausgegeben werden. <b><i>NIL/NULL-Pointer</i></b> werden hierbei als <b><i>-1 </i></b>ausgegeben.</p>
+<p>Weitere Hinweise bezüglich der gegebenen Testroutine folgen.</p>
+<p>Implementieren Sie dann die geforderte und vorgestellte Funktionalität des Indexmanagers und des B-Baums inklusive Testmethode. Die Abgabe erfolgt wie gehabt als gepackte tar-Datei über GOYA.</p>
+<p>Abgabe der Implementierung bis zum <font color="#FF0000">03.07.2005</font></p></blockquote>
+</td>
+</tr>
+</table>
+</font>
+</body>
+</html>

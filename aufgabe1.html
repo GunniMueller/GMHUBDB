@@ -1,0 +1,62 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.74 [en] (X11; U; Linux 2.2.16 i686) [Netscape]">
+   <title>DBSII - Aufgabe 1 - hubdb </title>
+</head>
+<body text="#000000" background="/images/dbisbackground.gif" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<font COLOR="#FFFFFF" FACE="Helvetica, Arial, sans-serif">
+<table BORDER=0 CELLSPACING=0 CELLPADDING=1 WIDTH=90%>
+<tr><td BGCOLOR="#000000"><center><font COLOR="#FFFFFF" SIZE=+2><b>Aufgabe 1 - hubdb - Filemanager und Systemkatalog</b></font><br></center></td></tr>
+<tr><td BGCOLOR="#CCCCCC">
+
+<br>
+<p>Im Rahmen der ersten Aufgabe sollen die Funktionalität des Filemanagers und des Systemkatalogs (SYSCAT) des Datenbankmanagementsystems <a HREF="./hubdb.html"><i>hubdb</i></a> implementiert werden.
+<br><h2><b>&nbsp;Systemkatalog (SYSCAT)</b></h2>
+<blockquote>
+<p>Der Systemkatalog ermöglicht ein Auflisten der Tabellen im aktuellen Datenbankverzeichnis. Die Funktionalität wird im Modul SYSCAT implementiert. Die <a HREF="./src/hubDB/include_stud/syscat.h">Schnittstelle des Moduls (Klassendefinition)</a> enthält demnach eine einzige Methode. Von dieser werden sämtliche Dateien des aktuellen Datenbankverzeichnisses aufgelistet, die die Endung .tab besitzen. Für jede dieser Dateien werden folgende Informationen ausgegeben, die in der Klasse <a HREF="./src/hubDB/include_stud/tableInfo.h">TableInfo</a> gekapselt werden:</p>
+<ul>
+<li>Der Dateiname ohne die Endung .tab (entspricht dem Tabellennamen),</li>
+<li>die Größe der Datei in (Datenbank-)Blöcken,</li>
+<li>das Datum der letzten Änderung der Datei.</li>
+</ul>
+<p>Zum Lesen der benötigten Dateiinformationen kann die Routine <b><i>stat(2)</i></b> der C-Bibliothek <i>sys/stat.h</i> verwendet werden. Die Inhalte eines Verzeichnisses können über die Routinen <b><i>opendir(3C)</i></b>, <b><i>readdir(3C)</i></b> und <b><i>closedir(3C)</i></b> der C-Bibliothek <i>dirent.h</i> gelesen werden. Weitere Informatinen findet man u.a. in dem Buch "<a HREF="http://www.aw-bc.com/catalog/academic/product/0,4096,0201563177,00.html">Advanced Programming in the UNIX Environment</a>" von W.R. Stevens. Eine Ausgabe des Buches ist in Raum IV.208 zur Einsicht verfügbar.</p>
+</blockquote>
+<br><h2><b>&nbsp;Filemanager (FileMgr)</i></b></h2>
+<blockquote>
+<p>Der <a HREF="./src/hubDB/include_stud/fileMgr.h">Filemanager</a> erlaubt das Anlegen, Löschen, Öffnen, Schließen, Schreiben und Lesen von Dateien auf dem Sekundärspeichermedium. Als Sekundärspeichermedium dient das UNIX-Filesystem. Jede Datei repräsentiert eine Tabelle in der aktuellen Datenbank. Der Dateiname entspricht dem Tabellennamen mit einer festen Endung (.tab). Jede geöffnete Datei erhält einen systemspezifischen Identifikator. Der Filemanager verwaltet eine Liste bzw. ein Array der aktuell geöffneten Dateien. Es kann immer nur eine feste Anzahl von Dateien gleichzeitig geöffnet sein. Jede Datei kann zu einem Zeitpunkt immer nur einmal geöffnet sein. Zur Verwaltung der geöffneten Dateien ist intern im Rahmen der Implementierung eine geeignete Datenstruktur zu entwerfen.</p>
+<p>Die Dateien sind logisch in N Blöcke fester Größe aufgeteilt. Die Lese- und Schreiboperationen des Filemanagers ermöglichen in der Datei einen Block (Block mit Nummerierung 0 .. N-1) zu lesen bzw. zu schreiben. Hierzu dient die Klasse <a HREF="./src/hubDB/include_stud/blockBuffer.h">BlockBuffer</a>. Jede Instanz repräsentiert einen Block auf dem Dateisystem, der dann über den Filemanager gelesen bzw. geschrieben werden kann.</p>
+</blockquote>
+<br><h2><b>&nbsp;Aufgabenstellung</b></h2>
+<blockquote>
+<p>Implementieren Sie die Funktionalität des Systemkatalogs und des Filemanagers mit ihren zugehörigen Klassen <a HREF="./src/hubDB/include_stud/tableInfo.h">TableInfo</a> und <a HREF="./src/hubDB/include_stud/blockBuffer.h">BlockBuffer</a> anhand der gegebenen Klassendefinitionen. Implementieren sie ausserdem die Methode <b><i>getMinorErrorMsg()</i></b> der Klasse <a HREF="./src/hubDB/include_stud/errorObj.h">errorObj</a>. Gegeben sind:</p>
+<ul>
+<li><a HREF="./src/hubDB/include_stud/global.h">global.h</a>: Hier sind die allgemeinen Typdeklarationen, die für das Projekt wichtig sind, zusammengefasst.</li>
+<li><a HREF="./src/hubDB/include_stud/errorObj.h">errorObj.h</a>: Definition der Fehlerklasse, welche im Datenbanksystem zur Fehlerbehandlung verwendet wird.</li>
+<li><a HREF="./src/hubDB/include_stud/syscat.h">syscat.h</a> und <a HREF="./src/hubDB/include_stud/tableInfo.h">tableInfo.h</a>: Die Definition der Klassen des Systemkatalogs.</li>
+<li><a HREF="./src/hubDB/include_stud/fileMgr.h">fileMgr.h</a> und <a HREF="./src/hubDB/include_stud/blockBuffer.h">blockBuffer.h</a>: Die Definition der Klassen des Filemanagers.</li>
+<li><a HREF="./src/hubDB/include_stud/hubDB_fileMgr.tar.gz">hubDB.tar.gz</a>: Alle benötigten Module und make-Files zum erstellen des Datenbanksystems (für Solaris). Diese ist für die sog. Vogel-Rechner des Instituts gedacht und soll für die Abgabe verwendet werden.</li>
+<ul>
+<li><a HREF="./src/hubDB/include_stud/hubDB.cygwin.tar.gz">hubDB.cygwin.tar.gz</a>: Alle benötigten Bibliotheken und Objektdateien zum erstellen des Datenbanksystems (für cygwin).</li>
+<li><a HREF="./src/hubDB/include_stud/hubDB.linux.tar.gz">hubDB.linux.tar.gz</a>: Alle benötigten Bibliotheken und Objektdateien zum erstellen des Datenbanksystems (für Linux).</li>
+<li><a HREF="./src/hubDB/include_stud/hubDB.solaris.tar.gz">hubDB.solaris.tar.gz</a>: Alle benötigten Bibliotheken und Objektdateien zum erstellen des Datenbanksystems (für Solaris).</li></ul>
+<li><a HREF="./src/hubDB/include_stud/loadTool.cpp">loadTool.cpp</a>, <a HREF="./src/hubDB/include_stud/swissprot.txt.gz">swissprot.txt</a> und <a HREF="./src/hubDB/include_stud/embl.txt.gz">embl.txt</a>: Ein Tool zum schnellen Import von Dateien, die sicherstellen, dass jede ID wirklich eindeutig ist. Die beiden LOAD-Dateien enthalten jeweils sämtliche Einträge der Genomdatenbank <a HREF="http://www.ebi.ac.uk/swissprot">SWISSPROT</a> (178.940 Zeilen) bzw. einen Ausschnitt der Einträge der Datenbank <a HREF="http://www.ebi.ac.uk/embl">EMBL</a> (1.000.000 Zeilen).
+<li><a HREF="./src/hubDB/include_stud/Makefile.common">Makefile.common</a>: Die aktuelle Version des Makfiles mit dem <b>Fix für make package</b>.</li>
+<li><a HREF="./src/hubDB/include_stud/fileMgr_test.cpp">fileMgr_test.cpp</a>: <b>Die aktuelle Version des FileMgr Tests</b>.</li>
+</ul>
+<p>Eine genaue Erklärung der Funktionalität der einzelnen Methoden entnehmen Sie den Kommentaren in den oben genannten Dateien. Achten Sie bei ihrer Implementierung auf eine klare Trenung von Klassendefinitionen und Methodenimplementation. Für den Filemanager ist eigenständig eine Testroutine zu entwerfen, die sämtliche Funktionalitäten des Filemanagers in geeigneter Weise demonstriert und testet. Die Implementierung der zugehörigen Methode <i><b>test()</i></b> ist in einer separaten Datei mit dem Namen <i>fileMgrTest.cpp</i> abzugeben. Während der Korrektur werden wir diese Testroutine u.a. durch unsere eigenen Testroutinen ersetzen. Alle übrigen Methoden sind in einer Datei mit dem Namen fileMgr.cpp abzugeben.</p>
+<p>Die Behandlung von Fehlersituationen während der Programmausführung erfolgt über das Konzept der <i>Ausnahmen</i>. Jede der zu implementierenden Methoden kann eine Reihe von Ausnahmen erzeugen, die von der Execution Engine des Datenbanksystems abgefangen werden. Als Grundlage zur Definition von Ausnahmen steht ein Fehlerobjekt (<a HREF="./src/hubDB/include_stud/errorObj.h">errorObj</a>) zur Verfügung. Für Fehler, die nicht auf Systemfehler zurückzuführen sind, müssen im Zuge der Implementierung geeignete Fehlertypen (in Form von Error-Codes) und Fehlermeldungen definiert werden.</p>
+<p><font color="#FF0000">Achtung</font>: Die Überprüfung, ob eine aktuelle Verbindung zu einer Datenbank existiert wird ausschließlich von der Execution Engine übernommen und muss deshalb in keiner der zu implementierenden Methoden vorgenommen werden!</p>
+</blockquote>
+<br><h2><b>&nbsp;Weitere Informationen</b></h2>
+<blockquote>
+<p>Um eine lauffähige Version unseres Datenbanksystems <a HREF="./hubdb.html"><i>hubdb</i></a> zu erhalten, sind weitere Module notwendig. Diese sind in dem tar-File <a HREF="./src/hubDB/include_stud/hubDB.tar.gz">hubDB.tar.gz</a> zusammengefasst. Jede Arbeitsgruppe enthält so eine einheitliche Verzeichnis- und Dateistruktur. In den entsprechenden Verzeichnissen sind die zur Lösung der Aufgabe notwendigen Modifikationen vorzunehmen. Die benötigten make-Files sind auch vorhanden und ggf. zu ergänzen. Als Abgabe wird ebenfalls ein tar-File mit allen geänderten und neuen Dateien, sowie mit den nicht geänderten Dateien erwartet (siehe <a HREF="../praktindex.html#Abgabeverfahren">Informationen zum Abgabeverfahren</a> auf der Homepage des Praktikums). Letzter Termin für die Abgabe der Aufgabe ist der 08.05.2005.</p>
+<p>Da das Importieren größerer Dateien durchaus einige Zeit in Anspruch nehmen kann (z.B. muss man für die Datei pdb.txt mit mehr als 30 Minuten rechnen), haben wir zusätzlich <a HREF="./src/hubDB/include_stud/loadTool.cpp">ein kleines Tool zur Verfügung getsellt, mit dem der Import schneller läuft</a>. Dieses Tool verläßt sich darauf, dass die Einträge in der LOAD-Datei alle eine eindeutige ID besitzen und überprüft dies auch nicht. Ein make-File für das Tool existiert nicht, es ist einfach per <i>g++ -o loadTool loadTool.cpp -I include</i> zu übersetzen. Der Aufruf erfolgt über <i>loadTool &lt; dateiname</i>, als Ergebnis wird eine Datei out.tab erzeugt. Zusätzlich haben wir zum Testen zwei weitere LOAD-Dateien unterschiedlicher Größer bereitgestellt.</p>
+</blockquote>
+</td>
+</tr>
+</table>
+</font>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.74 [en] (X11; U; Linux 2.2.16 i686) [Netscape]">
+   <title>DBSII - Aufgabe - hubdb </title>
+</head>
+<body text="#000000" background="/images/dbisbackground.gif" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<font COLOR="#FFFFFF" FACE="Helvetica, Arial, sans-serif">
+<table BORDER=0 CELLSPACING=0 CELLPADDING=1 WIDTH=90%>
+<tr><td BGCOLOR="#000000"><center><font COLOR="#FFFFFF" SIZE=+2><b>hubdb - Ein einfaches DBMS</b></font><br></center></td></tr>
+<tr><td BGCOLOR="#CCCCCC">
+<br><h2><b>&nbsp;Überblick</b></h2>
+<blockquote>
+<p>Ziel des Praktikums ist die Implementierung der wesentlichen Komponenten eines einfachen Datenbankmanagementsystem (DBMS) mit dem Namen <i>hubdb</i>. Die einzelnen Module werden anhand ihrer Schnittstelle vorgegeben und sind im Rahmen der Aufgabenlösung um die geforderte Funktionalität zu erweitern. Da es sich um ein sehr einfaches DBMS handelt, sind folgende Einschränkungen zu berücksichtigen:</p>
+<ul>
+<li>Eine Datenbank wird durch ein Verzeichnis des Dateisystems repräsentiert (im Folgenden als Datenbankverzeichnis bezeichnet).</li>
+<li>Jede Tabelle einer Datenbank entspricht einer Datei mit fester Endung (<i>tabelle</i>.tab) im Datenbankverzeichnis.</li>
+<li>Sämtliche Tabellen folgen einem einheitlichen Schema, bestehend aus den beiden Attributen <b>ID</b> und <b>NAME</b>. Die ID ist ein positiver INTEGER (> 0) und dient als Primärschlüssel der Datei. Der Name ist eine Zeichenkette (CHAR) der Länge 28 Zeichen. Beide Attribute sind NOT NULL.</li>
+</ul>
+</blockquote>
+<br><h2><b>&nbsp;Anfragesprache HQL</b></h2>
+<blockquote>
+<p>Das System <i>hubdb</i> umfasst einen Kommandozeileninterpreter zur Manipulation und Anfrage von Tabellen und Daten. Folgende Kommandos werden dabei unterstützt:</p>
+<p><b>CONNECT TO <i>directory</i></b>: Baut eine Verbindung zu einer Datenbank durch Angabe des Datenbakverzeichnis auf. Alle weiteren Kommandos können nur nach Aufbau einer solchen Verbindung ausgeführt werden. Es kann immer nur eine aktuelle Verbindung existieren, d.h. es kann nicht parallel mit mehreren Datenbanken gearbeitet werden. Die Datenbank, mit der das System nach dem Aufruf von CONNECT verbunden ist, wird im Folgenden als aktuelle Datenbank bezeichnet.</p>
+<p><b>DISCONNECT</b>: Beendet die aktuelle Verbindung zu einer Datenbank.</p>
+<p><b>CREATE TABLE <i>tablename</i></b>: Erstellt eine Tabelle mit dem Namen <i>tablename</i> in der aktuellen Datenbank. Diese wird als Datei <i>tablename</i>.tab im aktuellen Datenbankverzeichnis verwaltet.</p>
+<p><b>DROP TABLE <i>tablename</i></b>: Löscht die angegebene Tabelle aus der aktuellen Datenbank. Dabei wird die entsprechende Datei aus dem zugehörigen Datenbankverzeichnis gelöscht.</p>
+<p><b>LIST TABLES</b>: Listet sämtliche Tabellen der aktuellen Datenbank auf, zusammen mit ihrere Größe und den Daten der letzten Änderung.</p>
+<p><b>INSERT INTO <i>tablename</i> VALUES(<i>id</i>, <i>name</i>)</b>: Fügt ein Tupel mit den Werten <b>ID</b> = <i>id</i> und <b>NAME</b> = <i>name</i> in die angegebene Tabelle ein.</p>
+<p><b>DELETE FROM <i>tablename</i> WHERE ID = <i>id</i></b>: Löscht das Tupel mit dem Wert <i>id</i> im Primärschlüssel-Attribut aus der angegebenen Tabelle.</p>
+<p><b>SELECT * FROM <i>tabl name</i></b>: Listet sämtliche Tupel der angegebenen Tabelle mit ihrer ID und dem Namen auf.</p>
+<p><b>SELECT * FROM <i>tablename</i> WHERE ID = <i>id</i></b>: Listet nur das Tupel mit der gegebenen ID auf.</p>
+<p><a NAME="importFrom"><b>IMPORT FROM <i>filename</i> INTO <i>tablename</i></b></a>: Importiert Tupel aus der Textdatei <i>filename</i> in die angegebene Tabelle. Existierende Tupel der Tabelle werden dabei nicht überschrieben. Jedes Tupel wird als eine Zeie innerhalb der Datei repräsentiert, bestehend aus <i>id</i> und <i>name</i>, die durch einen Tabulator (\t) getrennt sind.</p>
+<p><b>EXPORT <i>tablename</i> TO <i>filename</i></b>: Exportiert die Tupel der angegebenen Tabelle in die Textdatei <i>filename</i>. Das resultierende Format entspricht dem einer IMPORT-Datei (siehe <a HREF="#importFrom">IMPORT</a>).</p>
+<p><b>QUIT</b>: Beendet das Program.</p>
+</blockquote>
+<br><h2><b>&nbsp;Architektur von <i>hubdb</i></b></h2>
+<blockquote>
+<p>Im der untenstehenden Abbildung ist die Architektur (der modulare Aufbau) von <i>hubdb</i> aufgezeigt. Die grau gezeichneten Module sind dabei im Rahmen der einzelnen Teilaufgaben zu Implementieren (die zugehörigen Aufgabennummern stehen bei den einzelnen Modulen).</p>
+<center><img SRC="./hubdb.gif"></center>
+<p>Folgende Funktionalität wird von den einzelnen Modulen erbracht:</p>
+<ul>
+<li><b>SYSCAT</b>: Der Systemkatalog ermöglicht die Abfrage des Inhalts der aktuellen Datenbank. Es können sämtliche in der aktuellen Datenbank enthaltene Tabellen mit einer Reihe von Metainformationen aufgelistet werden.</li>
+<li><b>Filemanager</b>: Der Filemanager ermöglicht das Anlegen, Löschen, Öffenen, Schließen, Lesen und Schreiben von Dateien bzw. Tabellen. Die Verwaltung der Daten in den Dateien erfolgt in Form von Blöcken.</li>
+<li><b>Buffermanager</b>: Der Buffermanager fungiert als Vermittler zwischen dem Dateisystem (Filemanager) und den Zugriffsmodulen (z.B. Tupelmanager, Recoverymanager, Indexmanager etc.). Alle diese Module arbeiten auf Seitenbasis. Ein der Aufgaben des Buffermanager ist deshalb die Abbildung der Blockstruktur der Dateien in eine virtuelle Seitenstruktur im Hauptspeicher. Zusätzlich fungiert der Buffermanager als Cache von Seiten im Hauptspeicher, um den Zugriff auf die Daten in den Dateien zu beschleunigen.</li>
+<li><b>Indexmanager</b>: Der Indexmanager verwaltet ein oder mehrere Indexe (hier speziell B-Bäume) und ermöglicht somit ein wesentlich effizienteres Auffinden einzelner Tupel in den Tabellen anhand ihres Primärschlüssels.</li>
+<li><b>Execution Engine</b>: Die Execution Engine realisiet die Ausführung jedes der oben aufgelisteten Kommandos. In diesem Modul ist somit die gesamte Ausführungslogik von <i>hubdb</i> gekapselt.</li>
+<li><b>Parser</b>: Realisiert den Kommandozeileninterpreter und ruft die entsprechenden Kommandos der Execution Engine auf.</li> 
+</ul>
+</blockquote>
+</td>
+</tr>
+</table>
+</font>
+</body>
+</html>

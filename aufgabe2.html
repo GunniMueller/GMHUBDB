@@ -1,0 +1,73 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.74 [en] (X11; U; Linux 2.2.16 i686) [Netscape]">
+   <title>DBSII - Aufgabe 2 - hubdb </title>
+</head>
+<body text="#000000" background="/images/dbisbackground.gif" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<font COLOR="#FFFFFF" FACE="Helvetica, Arial, sans-serif">
+<table BORDER=0 CELLSPACING=0 CELLPADDING=1 WIDTH=90%>
+<tr><td BGCOLOR="#000000"><center><font COLOR="#FFFFFF" SIZE=+2><b>Aufgabe 2 - hubdb - Buffermanager</b></font><br></center></td></tr>
+<tr><td BGCOLOR="#CCCCCC">
+
+<br>
+<p>Im Rahmen der zweiten Aufgabe ist die Funktionalität eines Buffermanagers für das Datenbankmanagementsystems <a HREF="./hubdb.html"><i>hubdb</i></a> zu implementieren.
+<br><h2><b>&nbsp;Überblick</b></h2>
+<blockquote>
+<p>Der Buffermanager fungiert als Vermittler zwischen dem Dateisystem und den Zugriffsmodulen (z.B. Tupelmanager, Recoverymanager, Indexmanager etc). Alle diese Module arbeiten auf Seitenbasis, d.h., jedes Datentupel in einer Seite wird durch die Adresse der Seite und dem relativen Offset des Tupels innerhalb der Seite identifiziert.</p>
+<p>Der Buffermanager garantiert eine logische Sicht in Form von Seiten auf die Datei. Er &uuml;bersetzt dazu eine Seitenadresse in eine Blockadresse des Filemangers in der physischen Datei. Im Praktikum ist das eine triviale &Uuml;bersetzung - eine Seite entspricht einem Block. Es gibt also eine statische 1:1 &Uuml;bersetzung zwischen Seiten und Bl&ouml;cken. <i>(Kompliziertere Algorithmen wie der Shadowing-Algorithmus speichern jeweils eine logische Seite in zwei Versionen, dadurch ben&ouml;tigt jede Seite zwei Bl&ouml;cke im physischen File, die alternierend beschrieben werden. Diese alternierende &Uuml;bersetzung erledigt der Buffermanager und Recoverymanager).</i></p>
+<p>Die Hauptaufgabe des Buffermanager besteht darin,&nbsp; die ben&ouml;tigten Seiten bzw. Bl&ouml;cke vom Dateisystem in den Hauptspeicherbereich des Datenbanksystems zu transferieren. Dieser Hauptspeicherbereich besteht aus einer Liste von so genannten Frames, die vom Buffermanager verwaltet werden - dabei kann jeder Frame genau eine Seite aufnehmen. Die Liste wird als Bufferpool bezeichnet. Es gibt nur eine Instanz eines
+Buffermanagers in <a HREF="./hubdb.html"><i>hubdb</i></a>.</p>
+<p><center><img SRC="bm_over.jpg"></center></p>
+<p>Die obige Abbildung soll zur Veranschaulichung der Abläufe im Buffermanager dienen. Wenn eines der Zugriffsmodule eine bestimmte Seite einer Datei benötigt, setzt es eine entsprechende Aufforderung an den Buffermanager ab (1). Dieser sucht dann in der Liste der Frames zunächst nach einem freien Platz. Ist keines der Frames unbelegt, so muss über eine geeignete Verdrängungsstrategie ein freier Platz geschaffen werden (2). Nun erfolgt die Übersetzung der Seitenadresse in die entsprechende Blockadresse (3) und das Laden des Blocks in den freien Eintrag im Bufferpool (4). Nun erhält das aufrufende Modul zugriff auf die Seite im Hauptspeicher.</p>
+</blockquote>
+<br><h2><b>&nbsp;Funktionalität des Buffermanagers</i></b></h2>
+<blockquote>
+<p>Der Buffermanager soll folgende Aufgaben realisieren:</p>
+<ul>
+<li>Alle Dateiseiten werden in einem <b>gemeinsamen Speicherbereich</b> (Bufferpool) gehalten, der als eine Art <b>shared virtual memory</b> f&uuml;r alle Datenbankmodule zug&auml;nglich ist.</li>
+<li>Jedem Modul wird ein Zugang zu dem Frame gegeben, der die geforderte Seite enth&auml;lt.</li>
+<li>Ein Modul informiert den Buffermanager, wenn es eine <b>Seite im Frame ge&auml;ndert</b> hat und die Seite geschrieben werden soll. Die <b>tats&auml;chliche Schreiboperation</b> wird vom Buffermanager evtl. zu einem sp&auml;teren Zeitpunkt <b>(entkoppelt)</b> ausgef&uuml;hrt.</li>
+<li>Einem Modul, das eine Seite angefordert hat, <b>muss</b> <b>garantiert werden</b>, dass diese <b>Seite</b> solange im Buffer bleibt, wie es das Modul erfordert. Ein Modul fordert also eine Seite als <b>im Bufferbereich auf unbestimmte Zeit fixiert</b> an. ( BufferMgr::fix(..) )</li>
+<li>Ein Modul <b>muss jede Seite</b>, die es fixiert hat, <b>auch wieder freigeben</b> (BufferMgr::unfix(..) ).</li>
+<li>Der Bufferbereich kann nicht alle Bl&ouml;cke der Datenbank gleichzeitig halten. Wenn der Buffermanager aufgefordert wird, eine neue Seite von der Datenbank zu laden, muss er entscheiden, welche Seite bzw. welcher Frame zu &uuml;berschreiben ist, d.h. <b>welche alte Seite</b> aus dem Buffer <b>zu verdr&auml;ngen </b>ist. (--> Verdr&auml;ngungsstrategie)</li>
+<li>Verschiedene Transaktion bzw. Zugriffsmodule k&ouml;nnen <b>gleichzeitig</b> auf eine Seite <b>lesend zugreifen.</b> Dies ist gleichbedeutend mit <b>mehrfachem Fixieren</b> der Seite im Frame. Erst wenn die <b>letzte Transaktion</b> die Seite <b>freigegeben</b> hat, kann die <b>Seite verdr&auml;ngt</b>
+werden.</li>
+<li>Wie behandelt man den Fall, dass der gesamte Speicherbereich vergeben
+wurde ?</li>
+</ul>
+</blockquote>
+<br><h2><b>&nbsp;Datenstrukturen</b></h2>
+<blockquote>
+<p><center><img SRC="./bufferpool.jpg"></center></p>
+Der Bufferpool besteht aus einer Liste von so genannten <b>Buffer Control Blocks (BCB)</b> die unsere Frames darstellen. Jeder BCB enthält ein Objekt der Klasse <b>Page</b>, die wiederum über die aus Aufgabe 1 bekannte Klasse <b>BlockBuffer</b> auf die Blöcke einer Datei zugreifen kann. Der Buffermanager &uuml;bergibt dem Zugriffsmodul die Frame-Adresse innerhalb eines <b>Buffer Access Control Blocks (BACB)</b>. Über diesen kann dann auf die in den Hauptspeicher geladenen Inhalte eines Blocks bzw. einer Seite zugegriffen werden.</p>
+<p>Folgende Schnittstellen sind gegeben:</p>
+<ul>
+<li><a HREF="./src/hubDB/include_stud/bufferMgr.h">BufferMgr.h</a>: Die Definition der Klasse des Buffermanagers.</li>
+<li><a HREF="./src/hubDB/include_stud/bufferControlBlock.h">BufferControlBlock.h</a>: Die Klasse BufferControlBlock (BCB) repräsentiert einen Frame des Bufferpools des Datenbanksystems.</li>
+<li><a HREF="./src/hubDB/include_stud/bufferAccessControlBlock.h">BufferAccessControlBlock.h</a>: Der Buffer Access Control Block ist die Datenstruktur, über die die überliegenden Module auf die von Buffermanager verwalteten Seiten im Hauptspeicher zugreifen können. Der BACB stellt eine Kapselung eines BCB für die aufrufenden Module dar.</li>
+<li><a HREF="./src/hubDB/include_stud/page.h">Page.h</a>:Reprasentiert eine logische Seite einer Datei, die wiederum einem Block in dieser Datei entspricht.</li>
+<li><a HREF="./src/hubDB/include_stud/hubDB.tar.gz">hubDB.tar.gz</a>: Alle benötigten Module und make-Files zum erstellen des Datenbanksystems (für Solaris). Diese ist für die sog. Vogel-Rechner des Instituts gedacht und soll für die Abgabe verwendet werden.<b>BufferMgr und FileMgr</b> </li>
+<li><a HREF="./src/hubDB/include_stud/hubDB_bufMgr.tar.gz">hubDB_bufMgr.tar.gz</a>: Alle neuen Module und make-Files zum erstellen des BufferManagers.</li>
+</ul>
+</blockquote>
+<br><h2><b>&nbsp;Aufgabenstellung</b></h2>
+<blockquote>
+<p>Erstellen Sie für den <font color="#FF0000">17. bzw. 19.05.2005</font> eine Präsentation (Dauer ca. 10-15 Minuten), in der folgendes kurz erläutert wird:</p>
+<ul>
+<li>Eventuelle Erweiterungen der vorgegebenen Strukturen des Buffermanagers.</li>
+<li>Vorstellung der zu implementierenden Algorithmen (u.a. die gewählte Verdrängungsstrategie). Die Vorstellung kann stichpunktartig, in Pseudo-Code oder mit Hilfe von Flussdiagrammen erfolgen.</li>
+<li>Vorstellen der zu implementierenden Testroutine.</li>
+<li> Sonstige Erweiterungen oder Optimierungen</li>
+</ul>
+<p>Die Abgabe der Präsentation (als PowerPoint- oder PDF-Datei) erfolgt per Mail an den jeweiligen Praktikumsbetreuer des Termins, an dem vorgetragen werden soll. Abgabetermin ist einen Tag vor dem Veranstaltungstermin (23.59 Uhr). Es werden nicht alle Gruppen vortragen können und wir werden sehn, wie wir eine geeignete Auswahl treffen können. Auf rege Teilnahme zum Praktikumstermin wird Wert gelegt.</p>
+<p>Implementieren Sie dann die geforderte und vorgestellte Funktionalität des Buffermanagers inklusive Verdrängungsstrategie und Testmethode. Die Abgabe erfolgt wie gehabt als gepackte tar-Datei über GOYA.</p>
+<p>Abgabe der Implementierung bis zum <font color="#FF0000">05.06.2005</font></p>
+</blockquote>
+</td>
+</tr>
+</table>
+</font>
+</body>
+</html>

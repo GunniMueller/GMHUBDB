@@ -1,0 +1,240 @@
+
+Einfuegen von 10, 20, 30, 40, 
+[ 0 (10	zehn) 0(20	zwanzig) 0(30	dreissig) 0(40	vierzig) 0]
+
+Einfuegen von 50, 
+[ 1 (30	dreissig) 3]
+	[ 0 (10	zehn) 0(20	zwanzig) 0]
+	[ 0 (40	vierzig) 0(50	fuenfzig) 0]
+
+Einfuegen von 15, 25, 45, 55, 
+[ 1 (30	dreissig) 3]
+	[ 0 (10	zehn) 0(15	fuenfzehn) 0(20	zwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (40	vierzig) 0(45	fuenfundvierzig) 0(50	fuenfzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 17, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3]
+	[ 0 (10	zehn) 0(15	fuenfzehn) 0]
+	[ 0 (20	zwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (40	vierzig) 0(45	fuenfundvierzig) 0(50	fuenfzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 12, 16, 22, 27, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3]
+	[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+	[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+	[ 0 (40	vierzig) 0(45	fuenfundvierzig) 0(50	fuenfzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 47, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3(47	siebenundvierzig) 5]
+	[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+	[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+	[ 0 (40	vierzig) 0(45	fuenfundvierzig) 0]
+	[ 0 (50	fuenfzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 42, 46, 52, 57, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3(47	siebenundvierzig) 5]
+	[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+	[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+	[ 0 (40	vierzig) 0(42	zweiundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+	[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Einfuegen von 35, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3(42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+	[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+	[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+	[ 0 (35	fuenfunddreissig) 0(40	vierzig) 0]
+	[ 0 (45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+	[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Einfuegen von 33, 34, 43, 44, 
+[ 1 (17	siebzehn) 4(30	dreissig) 3(42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+	[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+	[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+	[ 0 (33	dreiunddreissig) 0(34	vierunddreissig) 0(35	fuenfunddreissig) 0(40	vierzig) 0]
+	[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+	[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Einfuegen von 36, 
+[ 2 (35	fuenfunddreissig) 9]
+	[ 1 (17	siebzehn) 4(30	dreissig) 3]
+		[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+		[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0]
+		[ 0 (33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 7 (42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+		[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+		[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+		[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+Finde (nicht vorhandenen) Schluessel 100... OKAY
+Finde Schluessel 34... OKAY
+Finde kleinsten Schluessel (10)... OKAY
+
+Einfuegen von 18, 
+[ 2 (35	fuenfunddreissig) 9]
+	[ 1 (17	siebzehn) 4(27	siebenundzwanzig) 3]
+		[ 0 (10	zehn) 0(12	zwölf) 0(15	fuenfzehn) 0(16	sechzehn) 0]
+		[ 0 (18	achtzehn) 0(20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+		[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 7 (42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+		[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+		[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+		[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Loeschen von 12, 15, 
+[ 2 (35	fuenfunddreissig) 9]
+	[ 1 (17	siebzehn) 4(27	siebenundzwanzig) 3]
+		[ 0 (10	zehn) 0(16	sechzehn) 0]
+		[ 0 (18	achtzehn) 0(20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+		[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 7 (42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+		[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+		[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+		[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Loeschen von 16, 
+[ 2 (35	fuenfunddreissig) 9]
+	[ 1 (18	achtzehn) 4(27	siebenundzwanzig) 3]
+		[ 0 (10	zehn) 0(17	siebzehn) 0]
+		[ 0 (20	zwanzig) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+		[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 7 (42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+		[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+		[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0(46	sechsundvierzig) 0]
+		[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Loeschen von 20, 46, 
+[ 2 (35	fuenfunddreissig) 9]
+	[ 1 (18	achtzehn) 4(27	siebenundzwanzig) 3]
+		[ 0 (10	zehn) 0(17	siebzehn) 0]
+		[ 0 (22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+		[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 7 (42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+		[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+		[ 0 (43	dreiundvierzig) 0(44	vierundvierzig) 0(45	fuenfundvierzig) 0]
+		[ 0 (50	fuenfzig) 0(52	zweiundfuenfig) 0(55	fuenfundfuenfzig) 0(57	siebenundfuenfzig) 0]
+
+Loeschen von 17, 44, 52, 57, 
+[ 1 (27	siebenundzwanzig) 3(35	fuenfunddreissig) 7(42	zweiundvierzig) 6(47	siebenundvierzig) 5]
+	[ 0 (10	zehn) 0(18	achtzehn) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+	[ 0 (43	dreiundvierzig) 0(45	fuenfundvierzig) 0]
+	[ 0 (50	fuenfzig) 0(55	fuenfundfuenfzig) 0]
+
+Loeschen von 50, 
+[ 1 (27	siebenundzwanzig) 3(35	fuenfunddreissig) 7(42	zweiundvierzig) 6]
+	[ 0 (10	zehn) 0(18	achtzehn) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+	[ 0 (43	dreiundvierzig) 0(45	fuenfundvierzig) 0(47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Loeschen von 42, 
+[ 1 (27	siebenundzwanzig) 3(35	fuenfunddreissig) 7(43	dreiundvierzig) 6]
+	[ 0 (10	zehn) 0(18	achtzehn) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 0 (36	sechsunddreissig) 0(40	vierzig) 0]
+	[ 0 (45	fuenfundvierzig) 0(47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Loeschen von 40, 
+[ 1 (27	siebenundzwanzig) 3(35	fuenfunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(18	achtzehn) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (30	dreissig) 0(33	dreiunddreissig) 0(34	vierunddreissig) 0]
+	[ 0 (36	sechsunddreissig) 0(43	dreiundvierzig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Loeschen von 43, 
+[ 1 (27	siebenundzwanzig) 3(34	vierunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(18	achtzehn) 0(22	zweiundzwanzig) 0(25	fuenfundzwanzig) 0]
+	[ 0 (30	dreissig) 0(33	dreiunddreissig) 0]
+	[ 0 (35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 11, 12, 
+[ 1 (22	zweiundzwanzig) 3(34	vierunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0(12	zwölf) 0(18	achtzehn) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(30	dreissig) 0(33	dreiunddreissig) 0]
+	[ 0 (35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Loeschen von 18, 
+[ 1 (22	zweiundzwanzig) 3(34	vierunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0(12	zwölf) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(30	dreissig) 0(33	dreiunddreissig) 0]
+	[ 0 (35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 29, 
+[ 1 (22	zweiundzwanzig) 3(33	dreiunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0(12	zwölf) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 13, 
+[ 1 (22	zweiundzwanzig) 3(33	dreiunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0(12	zwölf) 0(13	dreizehn) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 14, 
+[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3(33	dreiunddreissig) 7(45	fuenfundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0]
+	[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0]
+	[ 0 (47	siebenundvierzig) 0(55	fuenfundfuenfzig) 0]
+
+Einfuegen von 56, 57, 58, 
+[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3(33	dreiunddreissig) 7(47	siebenundvierzig) 6]
+	[ 0 (10	zehn) 0(11	elf) 0]
+	[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+	[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0(45	fuenfundvierzig) 0]
+	[ 0 (55	fuenfundfuenfzig) 0(56	sechsundfuenfzig) 0(57	siebenundfuenfzig) 0(58	achtundfuenfzig) 0]
+
+Einfuegen von 59, 
+[ 2 (33	dreiunddreissig) 4]
+	[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3]
+		[ 0 (10	zehn) 0(11	elf) 0]
+		[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+		[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 7 (47	siebenundvierzig) 6(57	siebenundfuenfzig) 8]
+		[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0(45	fuenfundvierzig) 0]
+		[ 0 (55	fuenfundfuenfzig) 0(56	sechsundfuenfzig) 0]
+		[ 0 (58	achtundfuenfzig) 0(59	neunundfuenfzig) 0]
+
+Einfuegen von 53, 54, 60, 61, 
+[ 2 (33	dreiunddreissig) 4]
+	[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3]
+		[ 0 (10	zehn) 0(11	elf) 0]
+		[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+		[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 7 (47	siebenundvierzig) 6(57	siebenundfuenfzig) 8]
+		[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0(45	fuenfundvierzig) 0]
+		[ 0 (53	dreiundfuenfzig) 0(54	vierundfuenfzig) 0(55	fuenfundfuenfzig) 0(56	sechsundfuenfzig) 0]
+		[ 0 (58	achtundfuenfzig) 0(59	neunundfuenfzig) 0(60	sechzig) 0(61	einundsechzig) 0]
+
+Einfuegen von 65, 
+[ 2 (33	dreiunddreissig) 4]
+	[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3]
+		[ 0 (10	zehn) 0(11	elf) 0]
+		[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+		[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 7 (47	siebenundvierzig) 6(57	siebenundfuenfzig) 8(60	sechzig) 10]
+		[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0(45	fuenfundvierzig) 0]
+		[ 0 (53	dreiundfuenfzig) 0(54	vierundfuenfzig) 0(55	fuenfundfuenfzig) 0(56	sechsundfuenfzig) 0]
+		[ 0 (58	achtundfuenfzig) 0(59	neunundfuenfzig) 0]
+		[ 0 (61	einundsechzig) 0(65	fuenfundsechzig) 0]
+Nochmaliges Einfuegen von 65... OKAY
+Neu eingelesener B-Baum
+[ 2 (33	dreiunddreissig) 4]
+	[ 1 (12	zwölf) 5(22	zweiundzwanzig) 3]
+		[ 0 (10	zehn) 0(11	elf) 0]
+		[ 0 (13	dreizehn) 0(14	vierzehn) 0]
+		[ 0 (25	fuenfundzwanzig) 0(27	siebenundzwanzig) 0(29	neunundzwanzig) 0(30	dreissig) 0]
+	[ 7 (47	siebenundvierzig) 6(57	siebenundfuenfzig) 8(60	sechzig) 10]
+		[ 0 (34	vierunddreissig) 0(35	fuenfunddreissig) 0(36	sechsunddreissig) 0(45	fuenfundvierzig) 0]
+		[ 0 (53	dreiundfuenfzig) 0(54	vierundfuenfzig) 0(55	fuenfundfuenfzig) 0(56	sechsundfuenfzig) 0]
+		[ 0 (58	achtundfuenfzig) 0(59	neunundfuenfzig) 0]
+		[ 0 (61	einundsechzig) 0(65	fuenfundsechzig) 0]
+

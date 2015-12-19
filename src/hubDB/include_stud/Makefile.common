@@ -1,0 +1,52 @@
+CXX	 = g++
+CC	 = gcc
+DEBUG    = -g
+CFLAGS   = -c $(DEBUG) -I ${INCLUDEDIR}
+CXXFLAGS = $(CFLAGS)
+MKDIR	 = mkdir -p
+LD	 = $(CXX)
+AR	 = ar
+FLEX	 = flex
+BISON	 = bison
+MAKE	 = make
+LDFLAGS  = -L $(LIBDIR)
+OBJDIR   = .obj
+MISCDIR  = .misc
+AWK	 = awk
+std_inc  = ${INCLUDEDIR}/global.h ${INCLUDEDIR}/errorObj.h
+
+.PHONY : clean all $(SUBDIRS)
+
+.SUFFIXES:
+.SUFFIXES: .o .lex .y .cpp .c .h
+
+%.cpp %.o:
+	$(CXX) $(CXXFLAGS) $< -o $@
+%.c %.o:
+	$(CC) $(CFLAGS) $< -o $@
+%.o %.a:
+	${AR} r $@ $?
+%.o %:
+	${LD} -o $@ $^ ${LDFLAGS} ${LIBS}
+
+all: $(LIBDIR) $(SUBDIRS) $(OBJDIR) $(MISCDIR) $(TARGETS) 
+
+clean: 	$(SUBDIRS)
+	@rm -rf ${OBJDIR} *~ core ${MISCDIR} ${TARGETS} ${CLEAN_TARGETS} $(INCLUDEDIR)/*~
+
+package:
+	@make clean && TMPFILE=/tmp/hubDB_$$LOGNAME.tar && cd .. &&\
+	tar -cf $$TMPFILE hubDB && cd hubDB && mv $$TMPFILE hubDB.tar && gzip hubDB.tar
+
+$(SUBDIRS):
+	@$(MAKE) -C $@ $(MAKECMDGOALS)
+
+$(OBJDIR):
+	@$(MKDIR) $@
+
+$(MISCDIR):
+	@$(MKDIR) $@
+
+$(LIBDIR):
+	@$(MKDIR) $@
+
